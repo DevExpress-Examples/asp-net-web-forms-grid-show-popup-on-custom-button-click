@@ -4,7 +4,7 @@
 **[[Run Online]](https://codecentral.devexpress.com/e4424/)**
 <!-- run online end -->
 
-This example demonstrates how to show the [ASPxPopupControl](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxPopupControl) on the [ASPxGridView](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView) custom button click.
+This example demonstrates how to show the [ASPxPopupControl](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxPopupControl) when a user clicks the custom button in the grid's command column.
 
 ![ASPxGridView - ShowPopup](images/ShowPopup.png)
 
