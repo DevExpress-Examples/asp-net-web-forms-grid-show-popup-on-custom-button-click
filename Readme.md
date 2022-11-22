@@ -10,7 +10,7 @@ This example demonstrates how to show [ASPxPopupControl](https://docs.devexpress
 
 ## Show the Popup in the Client-Side Custom Button Click Event Handler
 
-Handle the grid's client-side [CustomButtonClick](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.CustomButtonClick) event. In the handler, get the key value of the specified row and call the `OnDetailsClick` function. In this function, send a callback to the popup control with the the row's key value as a parameter.
+Handle the grid's client-side [CustomButtonClick](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.CustomButtonClick) event. In the handler, get the key value of the specified row and call the `OnDetailsClick` function. In this function, send a callback to the popup control with the row's key value as a parameter.
 
 ```xml
 <dx:ASPxPopupControl ID="popup" ClientInstanceName="popup" runat="server" ... >
