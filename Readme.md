@@ -1,28 +1,132 @@
-<!-- default badges list -->
-![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/128542663/13.1.12%2B)
-[![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/E4424)
-[![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
-<!-- default badges end -->
-<!-- default file list -->
-*Files to look at*:
+# Grid View for ASP.NET Web Forms - Show the Popup Control on the Grid's Custom Button Click
 
-* [Default.aspx](./CS/Default.aspx) (VB: [Default.aspx](./VB/Default.aspx))
-* [Default.aspx.cs](./CS/Default.aspx.cs) (VB: [Default.aspx.vb](./VB/Default.aspx.vb))
+<!-- run online -->
+**[[Run Online]](https://codecentral.devexpress.com/e4424/)**
+<!-- run online end -->
+
+This example demonstrates how to show [ASPxPopupControl](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxPopupControl) on the [ASPxGridView](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView) custom button click.
+
+![ASPxGridView - ShowPopup](images/ShowPopup.png)
+
+## Show the Popup in the Client-Side Custom Button Click Event Handler
+
+Handle the grid's client-side [CustomButtonClick](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.CustomButtonClick) event. In the handler, get the key value of the specified row and call the `OnDetailsClick` function. In this function, send a callback to the popup control with the the row's key value as a parameter.
+
+```xml
+<dx:ASPxPopupControl ID="popup" ClientInstanceName="popup" runat="server" ... >
+    ...
+</dx:ASPxPopupControl>
+
+<dx:ASPxGridView ID="gv" runat="server" ClientInstanceName="gv" ... >
+    <Columns>
+        ...
+        <dx:GridViewCommandColumn VisibleIndex="4">
+            <CustomButtons>
+                <dx:GridViewCommandColumnCustomButton ID="btnDetails" Text="Details" />
+            </CustomButtons>
+        </dx:GridViewCommandColumn>
+    </Columns>
+    <ClientSideEvents CustomButtonClick="OnCustomButtonClick" />
+</dx:ASPxGridView>
+```
+
+```js
+function OnCustomButtonClick(s, e) {
+    OnDetailsClick(gv.GetRowKey(e.visibleIndex))
+}
+function OnDetailsClick(keyValue) {
+    popup.Show();
+    popup.PerformCallback(keyValue);
+}
+```
+
+## Show the Popup on the Custom Button Callback
+
+Handle the grid's server-side [CustomButtonCallback](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView.CustomButtonCallback) event. In the handler, get the value of the specified data cell and assign this value to the [ASPxGridView.JSProperties](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridBase.JSProperties) `cpKeyValue` property. Handle the popup's client-side [EndCallback](https://docs.devexpress.com/AspNet/js-ASPxClientPopupControlBase.EndCallback) event. In this handler, send a callback to the popup control with the key value as a parameter.
+
+```xml
+<dx:ASPxPopupControl ID="popup" ClientInstanceName="popup" runat="server" ...>
+    ...
+</dx:ASPxPopupControl>
+
+<dx:ASPxGridView ID="gv" runat="server" ClientInstanceName="gv" KeyFieldName="EmployeeID"
+    OnCustomButtonCallback="gv_CustomButtonCallback">
+    <ClientSideEvents EndCallback="OnEndCallback" />
+    <Columns>
+        ...
+        <dx:GridViewCommandColumn VisibleIndex="4">
+            <CustomButtons>
+                <dx:GridViewCommandColumnCustomButton ID="btnDetails" Text="Details" />
+            </CustomButtons>
+        </dx:GridViewCommandColumn>
+    </Columns>
+</dx:ASPxGridView>
+```
+
+```c#
+protected void gv_CustomButtonCallback(object sender, ASPxGridViewCustomButtonCallbackEventArgs e) {
+    ASPxGridView grid = (ASPxGridView)sender;
+    string keyValue = grid.GetRowValues(e.VisibleIndex, "EmployeeID").ToString();
+    gv.JSProperties["cpKeyValue"] = keyValue;
+}
+```
+
+```js
+function OnEndCallback(s, e) {
+    popup.Show();
+    popup.PerformCallback(gv.cpKeyValue);
+}
+```
+
+## Show the Popup on the Custom Button Callback When the Grid's CallBacks are disabled
+
+Handle the grid's server-side [CustomButtonCallback](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView.CustomButtonCallback) event. In the handler, get the value of the specified data cell and save this value in the current session state. Show the popup control on the grid's postback.
+
+```xml
+<dx:ASPxPopupControl ID="popup" ClientInstanceName="popup" runat="server" ...>
+    <ContentCollection>
+        <dx:PopupControlContentControl ID="PopupControlContentControl1" runat="server">
+            <dx:ASPxGridView ID="popupGv" runat="server" .../>
+        </dx:PopupControlContentControl>
+    </ContentCollection>
+</dx:ASPxPopupControl>
+
+<dx:ASPxGridView ID="gv" runat="server" ClientInstanceName="gv" KeyFieldName="EmployeeID"
+    OnCustomButtonCallback="gv_CustomButtonCallback" EnableCallBacks="false">
+    <Columns>
+        ...
+        <dx:GridViewCommandColumn VisibleIndex="4">
+            <CustomButtons>
+                <dx:GridViewCommandColumnCustomButton ID="btnDetails" Text="Details" />
+            </CustomButtons>
+        </dx:GridViewCommandColumn>
+    </Columns>
+</dx:ASPxGridView>
+```
+
+```c#
+protected void gv_CustomButtonCallback(object sender, ASPxGridViewCustomButtonCallbackEventArgs e) {
+    ASPxGridView grid = (ASPxGridView)sender;
+    string keyValue = grid.GetRowValues(e.VisibleIndex, "EmployeeID").ToString();
+    Session["EmployeeID"] = keyValue;
+    ((ASPxGridView)PopupControlContentControl1.FindControl("popupGv")).DataBind();
+    popup.ShowOnPageLoad = true;
+}
+```
+
+## Documentation
+
+- [How to show ASPxPopupControl on the ASPxGridView's CustomButton click](https://supportcenter.devexpress.com/ticket/details/ka18671/how-to-show-aspxpopupcontrol-on-the-aspxgridview-s-custombutton-click)
+- [ASPxPopupControl](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxPopupControl)
+- [ASPxGridView](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView)
+- [CustomButtonClick](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.CustomButtonClick)
+- [ASPxGridView.JSProperties](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridBase.JSProperties)
+
+## Files to Look At
+
 * [Default1.aspx](./CS/Default1.aspx) (VB: [Default1.aspx](./VB/Default1.aspx))
 * [Default1.aspx.cs](./CS/Default1.aspx.cs) (VB: [Default1.aspx.vb](./VB/Default1.aspx.vb))
 * [Default2.aspx](./CS/Default2.aspx) (VB: [Default2.aspx](./VB/Default2.aspx))
 * [Default2.aspx.cs](./CS/Default2.aspx.cs) (VB: [Default2.aspx.vb](./VB/Default2.aspx.vb))
 * [Default3.aspx](./CS/Default3.aspx) (VB: [Default3.aspx](./VB/Default3.aspx))
 * [Default3.aspx.cs](./CS/Default3.aspx.cs) (VB: [Default3.aspx.vb](./VB/Default3.aspx.vb))
-<!-- default file list end -->
-# How to show ASPxPopupControl on the ASPxGridView's CustomButton click
-<!-- run online -->
-**[[Run Online]](https://codecentral.devexpress.com/e4424/)**
-<!-- run online end -->
-
-
-<p>This example is an illustration of the <a href="https://www.devexpress.com/Support/Center/p/KA18671">How to show ASPxPopupControl on the ASPxGridView's CustomButton click</a> KB Article. Refer to the Article for an explanation.</p>
-
-<br/>
-
-
