@@ -5,7 +5,7 @@ Imports System.Linq
 Imports System.Web
 Imports System.Web.UI
 Imports System.Web.UI.WebControls
-Imports DevExpress.Web.ASPxPopupControl
+Imports DevExpress.Web
 
 Partial Public Class Default1
     Inherits System.Web.UI.Page

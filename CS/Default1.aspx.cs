@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DevExpress.Web.ASPxPopupControl;
+using DevExpress.Web;
 
 public partial class Default1 : System.Web.UI.Page {
     private byte[] image;
