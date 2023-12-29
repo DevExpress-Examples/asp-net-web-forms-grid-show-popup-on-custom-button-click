@@ -15,9 +15,6 @@
 * [Default3.aspx.cs](./CS/WebSite/Default3.aspx.cs) (VB: [Default3.aspx.vb](./VB/WebSite/Default3.aspx.vb))
 <!-- default file list end -->
 # How to show ASPxPopupControl on the ASPxGridView's CustomButton click
-<!-- run online -->
-**[[Run Online]](https://codecentral.devexpress.com/128542663/)**
-<!-- run online end -->
 
 
 <p>This example is an illustration of the <a href="https://www.devexpress.com/Support/Center/p/KA18671">How to show ASPxPopupControl on the ASPxGridView's CustomButton click</a> KB Article. Refer to the Article for an explanation.</p>
